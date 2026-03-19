@@ -4,7 +4,13 @@
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><VIS TITLE></title>
+    <title>U of T Courses</title>
+
+    <script>
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+        });
+    </script>
 
     <!-- Load CSS libraries -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -13,8 +19,12 @@
 </head>
 <body>
 
-<div class="container">
-    <div id="chart-area"></div>
+<div id="wrap" style="user-select:none; padding-top:2rem; display:flex; justify-content:center;">
+    <div id="tip"
+         style="position:absolute; pointer-events:none; opacity:0;background:#fff; border:1px solid #ddd; border-radius:8px; padding:8px 12px; font-size:13px;">
+        <div data-tip-name></div>
+        <div data-tip-val></div>
+    </div>
 </div>
 
 
@@ -27,6 +37,7 @@
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <!-- own js files -->
+<script src="js/bubbleChart.js"></script>
 <script src="js/main.js"></script>
 
 </body>
