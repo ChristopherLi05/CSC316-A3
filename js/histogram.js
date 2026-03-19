@@ -21,8 +21,8 @@ function renderHistogram(rows, {
 } = {}) {
     const MARGIN = { top: 40, right: 50, bottom: 70, left: 70 };
     const ANIM_MS = 500;
-    const BAR_COLOR        = '#534AB7';
-    const BAR_FILL         = '#EEEDFE';
+    const BAR_COLOR        = '#3e94bd';
+    const BAR_FILL         = '#e5f4ff';
     const MEAN_COLOR       = '#993C1D';
     const MEDIAN_COLOR     = '#0F6E56';
 

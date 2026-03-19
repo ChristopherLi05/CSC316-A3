@@ -16,6 +16,9 @@ function updateSelectedDept(newDept) {
 }
 
 d3.csv("data/course_evals.csv").then(rows => {
+    rows.forEach(d => {
+        d.dept = d.dept.replace("-ARTSC", "");
+    })
 
     // --- SVGs ---
     d3.select("#wrap")
