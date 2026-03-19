@@ -172,18 +172,27 @@ function renderBubbleChart(rows, {
     // --- Click ---
     node.on('click', function (event, d) {
         event.stopPropagation();
-        const isSelected = d3.select(this).classed('selected');
+        if (onClick) onClick(d.label, d.value, d);
+    });
+
+    // --- changeDept event ---
+    window.addEventListener('changeDept', event => {
+        const selectedDept = event.detail.selectedDept;
+
         node.classed('selected', false)
             .select('circle')
             .attr('stroke-width', 1.5)
             .attr('r', n => n.r);
-        if (!isSelected) {
-            d3.select(this).classed('selected', true)
-                .select('circle')
-                .attr('stroke-width', 3)
-                .attr('r', d.r * 1.12);
+
+        if (selectedDept != null) {
+            const match = node.filter(d => d.label === selectedDept);
+            if (!match.empty()) {
+                match.classed('selected', true)
+                    .select('circle')
+                    .attr('stroke-width', 3)
+                    .attr('r', d => d.r * 1.12);
+            }
         }
-        if (onClick) onClick(d.label, d.value, d);
     });
 
     // --- Drag ---
