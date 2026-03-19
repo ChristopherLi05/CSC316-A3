@@ -190,7 +190,7 @@ function renderBubbleChart(rows, {
     node.call(
         d3.drag()
             .on('start', (event, d) => {
-                if (!event.active) sim.alphaTarget(0.3).restart();
+                if (!event.active) sim.alphaTarget(0.05).restart();
                 d.fx = d.x;
                 d.fy = d.y;
                 d3.select(event.sourceEvent.target.closest('g.bubble')).style('cursor', 'grabbing');
