@@ -16,8 +16,6 @@ function renderHistogram(rows, {
     svgId         = 'hist-chart-svg',
     tipId         = 'hist-tip',
     maxBins       = 30,
-    onTypeChange  = null,
-    onDeptChange  = null,
 } = {}) {
     const MARGIN = { top: 40, right: 50, bottom: 70, left: 70 };
     const ANIM_MS = 500;
