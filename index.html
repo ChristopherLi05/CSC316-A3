@@ -19,16 +19,60 @@
 </head>
 <body>
 
+<!-- Bubble chart -->
 <div id="wrap" style="user-select:none; padding-top:2rem; display:flex; justify-content:center;">
     <div id="tip"
-         style="position:absolute; pointer-events:none; opacity:0;background:#fff; border:1px solid #ddd; border-radius:8px; padding:8px 12px; font-size:13px;">
+         style="position:absolute; pointer-events:none; opacity:0; background:#fff; border:1px solid #ddd; border-radius:8px; padding:8px 12px; font-size:13px;">
         <div data-tip-name></div>
         <div data-tip-val></div>
     </div>
 </div>
 
+<!-- Histogram controls -->
+<div style="padding-top:2rem; display:flex; justify-content:center; gap:2rem; align-items:center; flex-wrap:wrap;">
 
-<!-- Load JS libraries: jQuery, bootstrap, D3 -->
+    <div style="display:flex; align-items:center; gap:0.5rem;">
+        <label for="hist-type-select" style="font-size:14px; font-weight:500; color:#333; white-space:nowrap;">
+            Score Type
+        </label>
+        <select id="hist-type-select" class="form-select form-select-sm" style="width:auto; min-width:110px;">
+            <option value="Avg">Avg (INS1–INS6)</option>
+            <option value="INS1">INS1</option>
+            <option value="INS2">INS2</option>
+            <option value="INS3">INS3</option>
+            <option value="INS4">INS4</option>
+            <option value="INS5">INS5</option>
+            <option value="INS6">INS6</option>
+        </select>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:0.5rem;">
+        <label for="hist-dept-select" style="font-size:14px; font-weight:500; color:#333; white-space:nowrap;">
+            Department
+        </label>
+        <!-- Datalist gives free-text + dropdown suggestions -->
+        <input id="hist-dept-select"
+               list="hist-dept-list"
+               class="form-control form-control-sm"
+               style="width:auto; min-width:130px;"
+               placeholder="All"
+               value="All" />
+        <datalist id="hist-dept-list"></datalist>
+    </div>
+
+</div>
+
+<!-- Histogram chart -->
+<div id="hist-wrap" style="user-select:none; padding-top:0.5rem; display:flex; justify-content:center;">
+</div>
+
+<div id="hist-tip"
+     style="position:absolute; pointer-events:none; opacity:0; background:#fff; border:1px solid #ddd; border-radius:8px; padding:8px 12px; font-size:13px;">
+    <span data-tip-name></span>
+    <span data-tip-val></span>
+</div>
+
+<!-- Load JS libraries -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
@@ -38,6 +82,7 @@
 
 <!-- own js files -->
 <script src="js/bubbleChart.js"></script>
+<script src="js/histogram.js"></script>
 <script src="js/main.js"></script>
 
 </body>
