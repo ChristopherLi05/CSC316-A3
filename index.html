@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>U of T Courses</title>
+    <title>CSC316 A3</title>
 
     <script>
-        document.addEventListener('contextmenu', function(event) {
+        document.addEventListener('contextmenu', function (event) {
             event.preventDefault();
         });
     </script>
@@ -19,62 +19,79 @@
 </head>
 <body>
 
-<h1>How many courses are there?</h1>
+<!-- Page header -->
+<header class="page-header">
+    <h1>How good are the departments at U of T?</h1>
+    <p>
+        Students have historically complained about how this or that U of T department is consistently bad (cough stats
+        cough). This visualization aims to figure out whether this is truly the case, or if it is just a meme spread
+        around.
+    </p>
+</header>
 
-<!-- Bubble chart -->
-<div id="wrap" style="user-select:none; padding-top:2rem; display:flex; justify-content:center;">
-    <div id="tip"
-         style="position:absolute; pointer-events:none; opacity:0; background:#fff; border:1px solid #ddd; border-radius:8px; padding:8px 12px; font-size:13px;">
-        <div data-tip-name></div>
-        <div data-tip-val></div>
-    </div>
-</div>
+<!-- Bubble chart card -->
+<section class="viz-card">
+    <h2>A Comparison Between Departments</h2>
+    <p class="card-subtitle">Size corresponds to the number of evaluations for a specific department.</p>
+    <hr class="card-divider">
 
-<p>Try moving the bubbles around! You can zoom with mouse wheel and move with right click.</p>
-
-<!-- Histogram controls -->
-<div style="padding-top:2rem; display:flex; justify-content:center; gap:2rem; align-items:center; flex-wrap:wrap;">
-
-    <div style="display:flex; align-items:center; gap:0.5rem;">
-        <label for="hist-type-select" style="font-size:14px; font-weight:500; color:#333; white-space:nowrap;">
-            Score Type
-        </label>
-        <select id="hist-type-select" class="form-select form-select-sm" style="width:auto; min-width:110px;">
-            <option value="Avg">Avg (INS1–INS6)</option>
-            <option value="INS1">INS1</option>
-            <option value="INS2">INS2</option>
-            <option value="INS3">INS3</option>
-            <option value="INS4">INS4</option>
-            <option value="INS5">INS5</option>
-            <option value="INS6">INS6</option>
-        </select>
+    <div id="wrap">
+        <div id="tip">
+            <div data-tip-name></div>
+            <div data-tip-val></div>
+        </div>
     </div>
 
-    <div style="display:flex; align-items:center; gap:0.5rem;">
-        <label for="hist-dept-select" style="font-size:14px; font-weight:500; color:#333; white-space:nowrap;">
-            Department
-        </label>
-        <input id="hist-dept-select"
-               list="hist-dept-list"
-               class="form-control form-control-sm"
-               style="width:auto; min-width:130px;"
-               placeholder="All" />
-        <datalist id="hist-dept-list"></datalist>
+    <p class="bubble-hint">Try moving the bubbles around! You can zoom with mouse wheel and move with right click.</p>
+</section>
+
+<!-- Histogram card -->
+<section class="viz-card">
+    <h2>A Distribution of Values</h2>
+    <hr class="card-divider">
+
+    <!-- Controls -->
+    <div class="hist-controls">
+        <div class="d-flex align-items-center gap-2">
+            <label for="hist-type-select">Score Type</label>
+            <select id="hist-type-select" class="form-select form-select-sm">
+                <option value="Avg">Average of all Scores</option>
+                <option value="INS1">[INS1] Course was intellectually stimulating</option>
+                <option value="INS2">[INS2] Course gave me a deeper understanding of the material</option>
+                <option value="INS3">[INS3] Instructor created a good atmosphere for learning</option>
+                <option value="INS4">[INS4] Assignments improved my understanding of the material</option>
+                <option value="INS5">[INS5] Assignments demo'd my understanding of the material</option>
+                <option value="INS6">[INS6] Overall Course Quality</option>
+            </select>
+        </div>
+
+        <div class="hist-controls-depts">
+            <div class="d-flex align-items-center gap-2">
+                <label for="hist-dept-select-1">Department 1</label>
+                <input id="hist-dept-select-1"
+                       list="hist-dept-list-1"
+                       class="form-control form-control-sm"
+                       placeholder="All"/>
+                <datalist id="hist-dept-list-1"></datalist>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <label for="hist-dept-select-2">Department 2</label>
+                <input id="hist-dept-select-2"
+                       list="hist-dept-list-2"
+                       class="form-control form-control-sm"
+                       placeholder="All"/>
+                <datalist id="hist-dept-list-2"></datalist>
+            </div>
+        </div>
     </div>
 
-</div>
-
-<h1>Distribution of scores for [DEPT]</h1>
-
-<!-- Histogram chart -->
-<div id="hist-wrap" style="user-select:none; padding-top:0.5rem; display:flex; justify-content:center;">
-</div>
-
-<div id="hist-tip"
-     style="position:absolute; pointer-events:none; opacity:0; background:#fff; border:1px solid #ddd; border-radius:8px; padding:8px 12px; font-size:13px;">
-    <span data-tip-name></span>
-    <span data-tip-val></span>
-</div>
+    <!-- Histograms side by side -->
+    <div class="hist-charts-row">
+        <div id="hist-wrap-1"></div>
+        <div id="hist-wrap-2"></div>
+    </div>
+</section>
 
 <!-- Load JS libraries -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

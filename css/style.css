@@ -1,0 +1,208 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* ── CSS Variables ─────────────────────────────────────────────── */
+:root {
+    --bg:          #f0ede8;
+    --card-bg:     #ffffff;
+    --card-border: #d9d4cc;
+    --accent:      #c0392b;
+    --accent-soft: #fdf0ee;
+    --text-primary:   #1a1614;
+    --text-secondary: #6b635c;
+    --shadow: 0 2px 12px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.05);
+    --radius: 16px;
+}
+
+/* ── Base ──────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 2.5rem 1.5rem 4rem;
+    /* subtle grain texture */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* ── Page header ───────────────────────────────────────────────── */
+.page-header {
+    max-width: 874px;
+    margin: 0 auto 2.5rem;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+}
+
+.page-header p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 300;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+/* ── Cards ─────────────────────────────────────────────────────── */
+.viz-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 2rem 2rem 1.5rem;
+    margin: 0 auto 2rem;
+    max-width: 1100px;
+    transition: box-shadow 0.25s ease;
+}
+
+.viz-card:hover {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+}
+
+/* ── Card headings ─────────────────────────────────────────────── */
+.viz-card h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.25rem;
+}
+
+.viz-card .card-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+    margin-bottom: 0;
+}
+
+.card-divider {
+    border: none;
+    border-top: 1px solid var(--card-border);
+    margin: 1rem 0 1.25rem;
+}
+
+/* ── Bubble chart ──────────────────────────────────────────────── */
+#wrap {
+    padding-top: 1rem;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.bubble-hint {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: 0.75rem;
+    font-style: italic;
+}
+
+/* ── Tooltip ───────────────────────────────────────────────────── */
+#tip {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+    background: #fff;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+}
+
+/* ── Histogram controls ────────────────────────────────────────── */
+.hist-controls {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem 2rem;
+    align-items: center;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--card-border);
+    margin-bottom: 1.25rem;
+}
+
+.hist-controls-depts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.hist-controls label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+}
+
+.hist-controls .form-select,
+.hist-controls .form-control {
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    background-color: var(--bg);
+    min-width: 130px;
+    width: auto;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.hist-controls .form-select:focus,
+.hist-controls .form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.12);
+    outline: none;
+}
+
+/* ── Histogram charts side-by-side ────────────────────────────── */
+.hist-charts-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.hist-charts-row > div {
+    flex: 1 1 300px;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* ── Responsive tweaks ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .viz-card {
+        padding: 1.25rem 1rem 1rem;
+    }
+    .hist-controls {
+        gap: 0.75rem 1rem;
+    }
+}
+
+[data-tip-name] {
+    font-weight: bold;
+}
+
+svg * {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+
+    /*
+      Introduced in IE 10.
+      See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+    */
+    -ms-user-select: none;
+    user-select: none;
+}

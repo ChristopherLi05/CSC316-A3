@@ -11,33 +11,30 @@
 //   onDeptChange   {function}  called with (deptValue) when dept selector changes
 
 function renderHistogram(rows, {
-    valueCol      = 'Avg',
-    wrapId        = 'hist-wrap',
-    svgId         = 'hist-chart-svg',
-    tipId         = 'hist-tip',
-    maxBins       = 30,
+    valueCol = 'Avg',
+    wrapId = 'hist-wrap-1',
+    svgId = 'hist-chart-svg',
+    updateEvent = null,
+    maxBins = 30,
 } = {}) {
-    const MARGIN = { top: 40, right: 50, bottom: 70, left: 70 };
+    const MARGIN = {top: 40, right: 50, bottom: 70, left: 70};
     const ANIM_MS = 500;
-    const BAR_COLOR        = '#3e94bd';
-    const BAR_FILL         = '#e5f4ff';
-    const MEAN_COLOR       = '#993C1D';
-    const MEDIAN_COLOR     = '#0F6E56';
+    const BAR_COLOR = '#3e94bd';
+    const BAR_FILL = '#e5f4ff';
+    const MEAN_COLOR = '#993C1D';
+    const MEDIAN_COLOR = '#0F6E56';
 
     // --- State ---
     let currentValueCol = valueCol;
-    let currentDept     = null;   // null = All
+    let currentDept = null;   // null = All
 
-    const svg  = d3.select(`#${svgId}`);
+    const svg = d3.select(`#${svgId}`);
     const wrap = document.getElementById(wrapId);
-    const tip  = document.getElementById(tipId);
-    const tipName = tip.querySelector('[data-tip-name]');
-    const tipVal  = tip.querySelector('[data-tip-val]');
 
     let W = svg.node().getBoundingClientRect().width;
     let H = svg.node().getBoundingClientRect().height;
     let innerW = W - MARGIN.left - MARGIN.right;
-    let innerH = H - MARGIN.top  - MARGIN.bottom;
+    let innerH = H - MARGIN.top - MARGIN.bottom;
 
     // --- Root group ---
     const root = svg.append('g')
@@ -53,9 +50,9 @@ function renderHistogram(rows, {
         .attr('width', innerW).attr('height', innerH);
 
     const barsG = root.append('g').attr('class', 'bars').attr('clip-path', `url(#${clipId})`);
-    const axisGX  = root.append('g').attr('class', 'axis-x').attr('transform', `translate(0,${innerH})`);
-    const axisGY  = root.append('g').attr('class', 'axis-y');
-    const linesG  = root.append('g').attr('class', 'stat-lines');
+    const axisGX = root.append('g').attr('class', 'axis-x').attr('transform', `translate(0,${innerH})`);
+    const axisGY = root.append('g').attr('class', 'axis-y');
+    const linesG = root.append('g').attr('class', 'stat-lines');
 
     // Axis labels
     const xLabel = root.append('text')
@@ -101,7 +98,7 @@ function renderHistogram(rows, {
         if (col === 'Avg') {
             // Average of INS1–INS6 per row
             return filtered.map(r => {
-                const vals = [1,2,3,4,5,6]
+                const vals = [1, 2, 3, 4, 5, 6]
                     .map(i => +r[`INS${i}`])
                     .filter(v => !isNaN(v) && v > 0);
                 return vals.length ? d3.mean(vals) : NaN;
@@ -150,7 +147,7 @@ function renderHistogram(rows, {
         axisGY.transition().duration(dur)
             .call(d3.axisLeft(yScale).ticks(6).tickSizeOuter(0));
 
-        xLabel.text((col === 'Avg' ? 'Average Score (INS1–INS6)' : `${col} Score`) + ` (${values.length})`);
+        xLabel.text((col === 'Avg' ? 'Average Score (INS1–INS6)' : `${col} Score`) + ` (${values.length} Items)`);
 
         // Bars
         const bars = barsG.selectAll('rect.bar')
@@ -159,55 +156,48 @@ function renderHistogram(rows, {
         bars.join(
             enter => enter.append('rect')
                 .attr('class', 'bar')
-                .attr('x',      d => xScale(d.x0) + 1)
-                .attr('width',  d => Math.max(0, xScale(d.x1) - xScale(d.x0) - 2))
-                .attr('y',      innerH)
+                .attr('x', d => xScale(d.x0) + 1)
+                .attr('width', d => Math.max(0, xScale(d.x1) - xScale(d.x0) - 2))
+                .attr('y', innerH)
                 .attr('height', 0)
-                .attr('fill',   BAR_FILL)
+                .attr('fill', BAR_FILL)
                 .attr('stroke', BAR_COLOR)
                 .attr('stroke-width', 1)
                 .attr('rx', 2)
-                .on('mouseenter', function(event, d) {
+                .on('mouseenter', function (event, d) {
                     d3.select(this).attr('fill', BAR_COLOR).attr('opacity', 0.85);
-                    tipName.textContent = `${d.x0.toFixed(2)} – ${d.x1.toFixed(2)}`;
-                    tipVal.textContent  = `count: ${d.length}`;
-                    tip.style.opacity   = '1';
                 })
-                .on('mousemove', function(event) {
-                    const rect = wrap.getBoundingClientRect();
-                    tip.style.left = (event.clientX - rect.left + 14) + 'px';
-                    tip.style.top  = (event.clientY - rect.top  - 36) + 'px';
+                .on('mousemove', function (event) {
                 })
-                .on('mouseleave', function() {
+                .on('mouseleave', function () {
                     d3.select(this).attr('fill', BAR_FILL).attr('opacity', 1);
-                    tip.style.opacity = '0';
                 })
                 .call(e => e.transition().duration(dur)
-                    .attr('y',      d => yScale(d.length))
+                    .attr('y', d => yScale(d.length))
                     .attr('height', d => innerH - yScale(d.length))
                 ),
             update => update
                 .call(u => u.transition().duration(dur)
-                    .attr('x',      d => xScale(d.x0) + 1)
-                    .attr('width',  d => Math.max(0, xScale(d.x1) - xScale(d.x0) - 2))
-                    .attr('y',      d => yScale(d.length))
+                    .attr('x', d => xScale(d.x0) + 1)
+                    .attr('width', d => Math.max(0, xScale(d.x1) - xScale(d.x0) - 2))
+                    .attr('y', d => yScale(d.length))
                     .attr('height', d => innerH - yScale(d.length))
                 ),
             exit => exit
                 .call(e => e.transition().duration(dur)
-                    .attr('y',      innerH)
+                    .attr('y', innerH)
                     .attr('height', 0)
                     .remove()
                 )
         );
 
         // Mean & Median lines
-        const mean   = d3.mean(values);
+        const mean = d3.mean(values);
         const median = d3.median(values);
 
         const statData = [
-            { id: 'mean',   val: mean,   color: MEAN_COLOR,   dash: '5,3', labelY: 12 },
-            { id: 'median', val: median, color: MEDIAN_COLOR, dash: '2,3', labelY: 26 },
+            {id: 'mean', val: mean, color: MEAN_COLOR, dash: '5,3', labelY: 12},
+            {id: 'median', val: median, color: MEDIAN_COLOR, dash: '2,3', labelY: 26},
         ];
 
         linesG.selectAll('line.stat-line')
@@ -256,16 +246,19 @@ function renderHistogram(rows, {
     }
 
     // --- changeDept event (from bubble chart clicks) ---
-    window.addEventListener('changeDept', event => {
-        const dept = event.detail.selectedDept;
-        currentDept = dept;
+    if (updateEvent) {
+        window.addEventListener(updateEvent, event => {
+            const dept = event.detail.selectedDept;
+            currentDept = dept;
 
-        // Sync the dept dropdown if it exists
-        const deptSel = document.getElementById('hist-dept-select');
-        if (deptSel) deptSel.value = dept ?? 'All';
+            // Sync the dept dropdown if it exists
+            const deptSel = document.getElementById('hist-dept-select');
+            if (deptSel) deptSel.value = dept ?? 'All';
 
-        update(currentValueCol, currentDept);
-    });
+            update(currentValueCol, currentDept);
+        });
+    }
+
 
     // --- Public update handle ---
     // Called externally (from main.js) when selectors change
@@ -284,7 +277,7 @@ function renderHistogram(rows, {
         W = svg.node().getBoundingClientRect().width;
         H = svg.node().getBoundingClientRect().height;
         innerW = W - MARGIN.left - MARGIN.right;
-        innerH = H - MARGIN.top  - MARGIN.bottom;
+        innerH = H - MARGIN.top - MARGIN.bottom;
 
         svg.select('.hist-root').attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
         svg.select('.clip-rect').attr('width', innerW).attr('height', innerH);
@@ -300,5 +293,5 @@ function renderHistogram(rows, {
     update(currentValueCol, currentDept, false);
 
     // Expose setters so main.js can wire up the selectors
-    return { setType, setDept };
+    return {setType, setDept};
 }
