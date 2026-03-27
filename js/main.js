@@ -75,18 +75,31 @@ d3.csv("data/course_evals.csv").then(rows => {
 
     // --- Populate dept datalist ---
     const depts = Array.from(new Set(rows.map(r => r.dept))).sort();
-    const datalist = document.getElementById('hist-dept-list-1');
-    const datalist2 = document.getElementById('hist-dept-list-2');
+    // const datalist = document.getElementById('hist-dept-list-1');
+    // const datalist2 = document.getElementById('hist-dept-list-2');
+
+    // ['All', ...depts].forEach(d => {
+    //     const opt = document.createElement('option');
+    //     opt.value = d;
+    //     datalist.appendChild(opt);
+    //
+    //     const opt2 = document.createElement('option');
+    //     opt2.value = d;
+    //     datalist2.appendChild(opt2);
+    // });
+
+    const datalist  = document.getElementById('hist-dept-select-1');
+    const datalist2 = document.getElementById('hist-dept-select-2');
 
     ['All', ...depts].forEach(d => {
-        const opt = document.createElement('option');
-        opt.value = d;
-        datalist.appendChild(opt);
-
-        const opt2 = document.createElement('option');
-        opt2.value = d;
-        datalist2.appendChild(opt2);
+        [datalist, datalist2].forEach(sel => {  // reuse variable names or rename to sel1/sel2
+            const opt = document.createElement('option');
+            opt.value = d;
+            opt.textContent = d;
+            sel.appendChild(opt);
+        });
     });
+
 
     // --- Type selector (synced: histograms + ranking chart) ---
     document.getElementById('hist-type-select').addEventListener('change', function () {
@@ -107,42 +120,63 @@ d3.csv("data/course_evals.csv").then(rows => {
 
 
     // --- Dept selector (free-text + datalist) ---
-    function applyDeptInput(inpt, hist, dispatchEvent=true) {
-        const val = inpt.value.trim();
-        const valid = val === '' || val === 'All' || depts.includes(val);
-        if (valid) {
-            inpt.style.borderColor = '';
-            hist.setDept(val === '' ? 'All' : val);
+    // function applyDeptInput(inpt, hist, dispatchEvent=true) {
+    //     const val = inpt.value.trim();
+    //     const valid = val === '' || val === 'All' || depts.includes(val);
+    //     if (valid) {
+    //         inpt.style.borderColor = '';
+    //         hist.setDept(val === '' ? 'All' : val);
+    //
+    //         // Keep bubble chart in sync
+    //         const dept = (val === '' || val === 'All') ? null : val;
+    //         if (dept !== selectedDept && dispatchEvent) {
+    //             selectedDept = dept;
+    //             window.dispatchEvent(new CustomEvent("changeDept", {detail: {selectedDept}}));
+    //         }
+    //     } else {
+    //         inpt.style.borderColor = '#dc3545';
+    //     }
+    // }
 
-            // Keep bubble chart in sync
-            const dept = (val === '' || val === 'All') ? null : val;
-            if (dept !== selectedDept && dispatchEvent) {
-                selectedDept = dept;
-                window.dispatchEvent(new CustomEvent("changeDept", {detail: {selectedDept}}));
-            }
-        } else {
-            inpt.style.borderColor = '#dc3545';
+    function applyDeptInput(inpt, hist, dispatchEvent = true) {
+        const val = inpt.value;
+        hist.setDept(val === 'All' ? 'All' : val);
+
+        const dept = val === 'All' ? null : val;
+        if (dept !== selectedDept && dispatchEvent) {
+            selectedDept = dept;
+            window.dispatchEvent(new CustomEvent("changeDept", { detail: { selectedDept } }));
         }
     }
 
+
     const deptInput = document.getElementById('hist-dept-select-1');
-    deptInput.addEventListener('change', () => {applyDeptInput(deptInput, hist1)});
-    deptInput.addEventListener('keydown', e => {
-        if (e.key === 'Enter') applyDeptInput(deptInput, hist1);
-    });
-
+    // deptInput.addEventListener('change', () => {applyDeptInput(deptInput, hist1)});
+    // deptInput.addEventListener('keydown', e => {
+    //     if (e.key === 'Enter') applyDeptInput(deptInput, hist1);
+    // });
+    //
     const deptInput2 = document.getElementById('hist-dept-select-2');
-    deptInput2.addEventListener('change', () => {applyDeptInput(deptInput2, hist2, false)});
-    deptInput2.addEventListener('keydown', e => {
-        if (e.key === 'Enter') applyDeptInput(deptInput2, hist2, false);
-    });
+    // deptInput2.addEventListener('change', () => {applyDeptInput(deptInput2, hist2, false)});
+    // deptInput2.addEventListener('keydown', e => {
+    //     if (e.key === 'Enter') applyDeptInput(deptInput2, hist2, false);
+    // });
+    //
+    // // Keep the text input in sync when the bubble chart is clicked
+    // window.addEventListener('changeDept', event => {
+    //     const dept = event.detail.selectedDept;
+    //     deptInput.value = dept ?? 'All';
+    //     deptInput.style.borderColor = '';
+    // });
 
-    // Keep the text input in sync when the bubble chart is clicked
+    deptInput.addEventListener('change', () => applyDeptInput(deptInput, hist1));
+    deptInput2.addEventListener('change', () => applyDeptInput(deptInput2, hist2, false));
+
     window.addEventListener('changeDept', event => {
         const dept = event.detail.selectedDept;
         deptInput.value = dept ?? 'All';
-        deptInput.style.borderColor = '';
     });
+
 
     document.getElementById('show-mean').addEventListener('change', e => {
         hist1.setShowMean(e.target.checked);

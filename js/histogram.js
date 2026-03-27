@@ -158,7 +158,7 @@ function renderHistogram(rows, {
         axisGY.transition().duration(dur)
             .call(d3.axisLeft(yScale).ticks(6).tickSizeOuter(0));
 
-        xLabel.text((col === 'Avg' ? 'Average Score (INS1–INS6)' : `${col} Score`) + ` (${values.length} Items)`);
+        xLabel.text((col === 'Avg' ? 'Average Score (INS1–INS6)' : `${col} Score`) + (currentDept === null ? "" : ` for ${DeptMapping[currentDept] ?? currentDept}`) + ` (${values.length} Reviews)`);
 
         // Bars
         const bars = barsG.selectAll('rect.bar')
@@ -177,17 +177,17 @@ function renderHistogram(rows, {
                 .attr('rx', 2)
                 .on('mouseenter', function (event, d) {
                     d3.select(this).attr('fill', BAR_COLOR).attr('opacity', 0.85);
-                    window.dispatchEvent(new CustomEvent('hist-bar-hover', { detail: { x0: d.x0, x1: d.x1 } }));
+                    window.dispatchEvent(new CustomEvent('hist-bar-hover', {detail: {x0: d.x0, x1: d.x1}}));
                 })
                 .on('mousemove', function (event) {
                     const [mx] = d3.pointer(event, root.node());
                     const rating = xScale.invert(mx);
-                    window.dispatchEvent(new CustomEvent('hist-hover', { detail: { rating } }));
+                    window.dispatchEvent(new CustomEvent('hist-hover', {detail: {rating}}));
                 })
                 .on('mouseleave', function () {
                     d3.select(this).attr('fill', BAR_FILL).attr('opacity', 1);
-                    window.dispatchEvent(new CustomEvent('hist-hover', { detail: { rating: null } }));
-                    window.dispatchEvent(new CustomEvent('hist-bar-hover', { detail: { rating: null } }));
+                    window.dispatchEvent(new CustomEvent('hist-hover', {detail: {rating: null}}));
+                    window.dispatchEvent(new CustomEvent('hist-bar-hover', {detail: {rating: null}}));
                 })
                 .call(e => e.transition().duration(dur)
                     .attr('y', d => yScale(d.length))
@@ -213,7 +213,7 @@ function renderHistogram(rows, {
         const median = d3.median(values);
 
         const statData = [
-            {id: 'mean',   val: mean,   color: MEAN_COLOR,   dash: '5,3', labelY: 12},
+            {id: 'mean', val: mean, color: MEAN_COLOR, dash: '5,3', labelY: 12},
             {id: 'median', val: median, color: MEDIAN_COLOR, dash: '2,3', labelY: 12},
         ].filter(d => d.id === 'mean' ? showMean : showMedian);
 
@@ -261,7 +261,7 @@ function renderHistogram(rows, {
                 exit => exit.transition().duration(dur).attr('opacity', 0).remove()
             );
 
-        window.addEventListener('hist-hover', ({ detail: { rating } }) => {
+        window.addEventListener('hist-hover', ({detail: {rating}}) => {
             if (rating == null) {
                 hoverLine.attr('opacity', 0);
             } else {
@@ -271,14 +271,15 @@ function renderHistogram(rows, {
             }
         });
 
-        window.addEventListener('hist-bar-hover', ({ detail }) => {
-            barsG.selectAll('rect.bar').each(function(d) {
+        window.addEventListener('hist-bar-hover', ({detail}) => {
+            barsG.selectAll('rect.bar').each(function (d) {
                 const overlaps = detail && d.x0 < detail.x1 && d.x1 > detail.x0;
                 d3.select(this)
                     .attr('fill', overlaps ? BAR_COLOR : BAR_FILL)
                     .attr('opacity', overlaps ? 0.85 : 1);
             });
-        });    }
+        });
+    }
 
     // --- changeDept event (from bubble chart clicks) ---
     if (updateEvent) {
@@ -329,8 +330,15 @@ function renderHistogram(rows, {
     // Initial draw
     update(currentValueCol, currentDept, false);
 
-    function setShowMean(v)   { showMean   = v; update(currentValueCol, currentDept); }
-    function setShowMedian(v) { showMedian = v; update(currentValueCol, currentDept); }
+    function setShowMean(v) {
+        showMean = v;
+        update(currentValueCol, currentDept);
+    }
+
+    function setShowMedian(v) {
+        showMedian = v;
+        update(currentValueCol, currentDept);
+    }
 
     // Expose setters so main.js can wire up the selectors
     return {setType, setDept, setShowMean, setShowMedian};
