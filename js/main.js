@@ -42,6 +42,14 @@ d3.csv("data/course_evals.csv").then(rows => {
         .attr("width", hist_wrap_size).attr("height", hist_wrap_size)
         .attr("id", "hist-chart-svg-2");
 
+    // --- Ranking chart SVG ---
+    const rankWrap = document.getElementById("ranking-wrap");
+    d3.select("#ranking-wrap")
+        .append("svg")
+        .attr("width", rankWrap.clientWidth)
+        .attr("height", 500)          // initial height; rankingChart resizes dynamically
+        .attr("id", "ranking-chart-svg");
+
     // --- Bubble Chart ---
     renderBubbleChart(rows, (label) => {
         updateSelectedDept(label);
@@ -59,6 +67,12 @@ d3.csv("data/course_evals.csv").then(rows => {
         svgId: "hist-chart-svg-2",
     });
 
+    // --- Ranking chart ---
+    const ranking = renderRankingChart(rows, {
+        wrapId: "ranking-wrap",
+        svgId:  "ranking-chart-svg",
+    });
+
     // --- Populate dept datalist ---
     const depts = Array.from(new Set(rows.map(r => r.dept))).sort();
     const datalist = document.getElementById('hist-dept-list-1');
@@ -74,14 +88,25 @@ d3.csv("data/course_evals.csv").then(rows => {
         datalist2.appendChild(opt2);
     });
 
-    // --- Type selector ---
+    // --- Type selector (synced: histograms + ranking chart) ---
     document.getElementById('hist-type-select').addEventListener('change', function () {
+        hist1.setType(this.value);
+        hist2.setType(this.value);
+        // sync ranking selector to match
+        document.getElementById('rank-type-select').value = this.value;
+        ranking.setType(this.value);
+    });
+
+    document.getElementById('rank-type-select').addEventListener('change', function () {
+        ranking.setType(this.value);
+        // sync card 2 selector to match
+        document.getElementById('hist-type-select').value = this.value;
         hist1.setType(this.value);
         hist2.setType(this.value);
     });
 
+
     // --- Dept selector (free-text + datalist) ---
-    // Fire on Enter or when user picks from datalist (input event + blur)
     function applyDeptInput(inpt, hist, dispatchEvent=true) {
         const val = inpt.value.trim();
         const valid = val === '' || val === 'All' || depts.includes(val);
@@ -96,23 +121,21 @@ d3.csv("data/course_evals.csv").then(rows => {
                 window.dispatchEvent(new CustomEvent("changeDept", {detail: {selectedDept}}));
             }
         } else {
-            // Highlight invalid input
-            deptInput.style.borderColor = '#dc3545';
+            inpt.style.borderColor = '#dc3545';
         }
     }
 
     const deptInput = document.getElementById('hist-dept-select-1');
-    deptInput.addEventListener('change', () => {applyDeptInput(deptInput, hist1)});   // datalist pick
+    deptInput.addEventListener('change', () => {applyDeptInput(deptInput, hist1)});
     deptInput.addEventListener('keydown', e => {
         if (e.key === 'Enter') applyDeptInput(deptInput, hist1);
     });
 
     const deptInput2 = document.getElementById('hist-dept-select-2');
-    deptInput2.addEventListener('change', () => {applyDeptInput(deptInput2, hist2, false)});   // datalist pick
+    deptInput2.addEventListener('change', () => {applyDeptInput(deptInput2, hist2, false)});
     deptInput2.addEventListener('keydown', e => {
         if (e.key === 'Enter') applyDeptInput(deptInput2, hist2, false);
     });
-
 
     // Keep the text input in sync when the bubble chart is clicked
     window.addEventListener('changeDept', event => {
@@ -128,5 +151,16 @@ d3.csv("data/course_evals.csv").then(rows => {
     document.getElementById('show-median').addEventListener('change', e => {
         hist1.setShowMedian(e.target.checked);
         hist2.setShowMedian(e.target.checked);
+    });
+
+    // --- Ranking chart controls ---
+    document.querySelectorAll('input[name="rank-mode"]').forEach(radio => {
+        radio.addEventListener('change', function () {
+            if (this.checked) ranking.setMode(this.value);
+        });
+    });
+
+    document.getElementById('rank-n-select').addEventListener('change', function () {
+        ranking.setN(+this.value);
     });
 });

@@ -105,11 +105,59 @@
 </section>
 
 <section class="viz-card">
+    <h2>A Leaderboard of Rankings</h2>
+    <p class="card-subtitle">
+        Mean score per department, filtered to departments with at least 3 evaluations.
+    </p>
+    <hr class="card-divider">
+
+    <!-- Controls -->
+    <div class="hist-controls">
+        <div class="d-flex align-items-center gap-2">
+            <label for="rank-type-select">Score Type</label>
+            <select id="rank-type-select" class="form-select form-select-sm">
+                <option value="Avg">Average of all Scores</option>
+                <option value="INS1">[INS1] Course was intellectually stimulating</option>
+                <option value="INS2">[INS2] Course gave me a deeper understanding of the material</option>
+                <option value="INS3">[INS3] Instructor created a good atmosphere for learning</option>
+                <option value="INS4">[INS4] Assignments improved my understanding of the material</option>
+                <option value="INS5">[INS5] Assignments demo'd my understanding of the material</option>
+                <option value="INS6">[INS6] Overall Course Quality</option>
+            </select>
+        </div>
+
+        <!-- Top / Bottom toggle -->
+        <div class="d-flex align-items-center gap-2">
+            <label>Show</label>
+            <div class="btn-group btn-group-sm" role="group" aria-label="Ranking direction">
+                <input type="radio" class="btn-check" name="rank-mode" id="rank-top"    value="top"    checked>
+                <label class="btn btn-outline-primary" for="rank-top">Top</label>
+
+                <input type="radio" class="btn-check" name="rank-mode" id="rank-bottom" value="bottom">
+                <label class="btn btn-outline-danger"  for="rank-bottom">Bottom</label>
+            </div>
+        </div>
+
+        <!-- N selector -->
+        <div class="d-flex align-items-center gap-2">
+            <label for="rank-n-select">Departments</label>
+            <select id="rank-n-select" class="form-select form-select-sm" style="width: auto;">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="ranking-wrap"></div>
+</section>
+
+<section class="viz-card">
     <h2>Sources:</h2>
     <ul>
         <li><a href="https://github.com/ChristopherLi05/UofT-Course-Data">U of T Course Data</a></li>
     </ul>
-
 </section>
 
 <!-- Load JS libraries -->
@@ -121,8 +169,10 @@
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <!-- own js files -->
+<script src="js/config.js"></script>
 <script src="js/bubbleChart.js"></script>
 <script src="js/histogram.js"></script>
+<script src="js/rankingChart.js"></script>
 <script src="js/main.js"></script>
 
 </body>
