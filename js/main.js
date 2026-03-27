@@ -120,4 +120,13 @@ d3.csv("data/course_evals.csv").then(rows => {
         deptInput.value = dept ?? 'All';
         deptInput.style.borderColor = '';
     });
+
+    document.getElementById('show-mean').addEventListener('change', e => {
+        hist1.setShowMean(e.target.checked);
+        hist2.setShowMean(e.target.checked);
+    });
+    document.getElementById('show-median').addEventListener('change', e => {
+        hist1.setShowMedian(e.target.checked);
+        hist2.setShowMedian(e.target.checked);
+    });
 });

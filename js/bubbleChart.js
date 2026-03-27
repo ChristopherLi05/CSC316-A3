@@ -262,7 +262,7 @@ function renderBubbleChart(rows, onClick = null) {
             d3.select(this).select('circle').attr('r', d.r * 1.12);
             tipName.textContent = DeptMapping[d.label] ?? d.label;
             tipVal.innerHTML = (d.score != null ? `Avg Score: ${d.score.toFixed(2)}<br>` : '') + `Count: ${d.value.toLocaleString()}`;
-            tip.style.opacity = '1';
+            if (!dragging) tip.style.opacity = '1';
         })
         .on('mousemove', function (event) {
             const rect = wrap.getBoundingClientRect();
@@ -300,24 +300,30 @@ function renderBubbleChart(rows, onClick = null) {
         }
     });
 
+    let dragging = false;
+
     // --- Drag ---
     node.call(
         d3.drag()
             .on('start', (event, d) => {
+                dragging = true;
                 if (!event.active) sim.alphaTarget(0.15).restart();
                 d.fx = d.x;
                 d.fy = d.y;
                 d3.select(event.sourceEvent.target.closest('g.bubble')).style('cursor', 'grabbing');
+                tip.style.opacity = '0'; // hide while dragging
             })
             .on('drag', (event, d) => {
                 d.fx = event.x;
                 d.fy = event.y;
             })
             .on('end', (event, d) => {
+                dragging = false;
                 if (!event.active) sim.alphaTarget(0);
                 d.fx = null;
                 d.fy = null;
                 d3.select(event.sourceEvent.target.closest('g.bubble')).style('cursor', onClick ? 'pointer' : 'grab');
+                tip.style.opacity = '1';
             })
     );
 
