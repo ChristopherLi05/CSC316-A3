@@ -163,4 +163,11 @@ d3.csv("data/course_evals.csv").then(rows => {
     document.getElementById('rank-n-select').addEventListener('change', function () {
         ranking.setN(+this.value);
     });
+
+    document.getElementById('random-dept-btn').addEventListener('click', () => {
+        const randomDept = depts[Math.floor(Math.random() * depts.length)];
+        deptInput2.value = randomDept;
+        applyDeptInput(deptInput2, hist2, false);
+    });
+
 });

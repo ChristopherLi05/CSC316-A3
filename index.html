@@ -21,9 +21,9 @@
 
 <!-- Page header -->
 <header class="page-header">
-    <h1>How Good are the Departments at U of T?</h1>
+    <h1>How Good are the Departments at <span class="nowrap">U of T</span>?</h1>
     <p>
-        Students have long debated the quality of various departments at U of T, some even gaining a poor reputation (cough stats cough).
+        Students have long debated the quality of various departments at <span class="nowrap">U of T</span>, some even gaining a poor reputation (cough stats cough).
         This visualization explores whether these perceptions actually reflect reality, or are simply the result of a vocal minority.
     </p>
 </header>
@@ -41,13 +41,14 @@
         </div>
     </div>
 
-    <p class="bubble-hint">Try moving the bubbles around! You can zoom with mouse wheel and move with right click.</p>
-    <p class="bubble-hint">You can also click on a bubble to compare it with others!</p>
+    <p class="bubble-hint">Try moving the bubbles around! You can zoom with mouse wheel and move with right click.<br>You can also click on a bubble to compare it with others.</p>
 </section>
 
 <!-- Histogram card -->
 <section class="viz-card">
     <h2>A Distribution of Scores</h2>
+    <p class="card-subtitle">Compare the differences between two departments</p>
+
     <hr class="card-divider">
 
     <!-- Controls -->
@@ -82,6 +83,7 @@
                        class="form-control form-control-sm"
                        placeholder="All"/>
                 <datalist id="hist-dept-list-2"></datalist>
+                <button id="random-dept-btn" class="btn btn-outline-secondary btn-sm">Randomize!</button>
             </div>
         </div>
 
@@ -102,6 +104,8 @@
         <div id="hist-wrap-1"></div>
         <div id="hist-wrap-2"></div>
     </div>
+
+    <p class="bubble-hint">Try typing into each of the selection boxes.</p>
 </section>
 
 <section class="viz-card">
